@@ -36,8 +36,16 @@ module OmniAuth
 
       def raw_info
         @raw_info ||= begin
-          user    = MultiJson.decode(access_token.get('/user').body)
-          profile = MultiJson.decode(access_token.get(user['profile']).body)
+          user    = MultiJson.decode(
+            access_token.get('/user', 
+                             headers: {"Accept-Charset"=>"utf-8"}
+                            ).body
+          )
+          profile = MultiJson.decode(
+            access_token.get(user['profile'], 
+                            headers: {"Accept-Charset"=>"utf-8"}
+                            ).body
+          )
           { 'userID' => user['userID'] }.merge(profile)
         end
       end
